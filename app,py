@@ -1,0 +1,20 @@
+from flask import Flask, render_template, request, redirect
+
+app = Flask(__name__)
+todo_list = []
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        task = request.form.get("task")
+        if task:
+            todo_list.append(task)
+        elif "remove" in request.form:
+            index = int(request.form.get("remove"))
+            if 0 <= index < len(todo_list):
+                todo_list.pop(index)
+        return redirect("/")
+    return render_template("index.html", tasks=todo_list)
+
+if __name__ == "__main__":
+    app.run(debug=True)
